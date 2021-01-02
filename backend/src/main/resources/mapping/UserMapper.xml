@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sss.archetype.dao.UserMapper">
+
+    <resultMap id="BaseResultMap" type="com.sss.archetype.entity.User">
+        <id column="id" property="id" />
+            <result column="username" jdbcType="VARCHAR" property="username" />
+            <result column="password" jdbcType="VARCHAR" property="password" />
+            <result column="face_image" jdbcType="VARCHAR" property="faceImage" />
+            <result column="face_image_big" jdbcType="VARCHAR" property="faceImageBig" />
+            <result column="nickname" jdbcType="VARCHAR" property="nickname" />
+            <result column="qrcode" jdbcType="VARCHAR" property="qrcode" />
+            <result column="cid" jdbcType="VARCHAR" property="cid" />
+    </resultMap>
+
+    <sql id="allColumn">
+        id,username,password,face_image,face_image_big,nickname,qrcode,cid
+    </sql>
+
+    <insert id="insert" parameterType="com.sss.archetype.entity.User" useGeneratedKeys="true" keyProperty="id">
+        insert into t_user (<include refid="allColumn"></include>)
+        values (#{id},#{username},#{password},#{faceImage},#{faceImageBig},#{nickname},#{qrcode},#{cid})
+    </insert>
+
+    <insert id="insertBatch">
+        insert into t_user (<include refid="allColumn"></include>)
+        values
+        <foreach collection="list" item="element" separator=",">
+            (#{element.id},#{element.username},#{element.password},#{element.faceImage},#{element.faceImageBig},#{element.nickname},#{element.qrcode},#{element.cid})
+        </foreach>
+    </insert>
+
+    <update id="updateById" parameterType="com.sss.archetype.entity.User">
+        update t_user set
+            username = #{username},
+            password = #{password},
+            face_image = #{faceImage},
+            face_image_big = #{faceImageBig},
+            nickname = #{nickname},
+            qrcode = #{qrcode},
+            cid = #{cid}
+        where id = #{id}
+    </update>
+
+    <select id="getById" parameterType="java.lang.String" resultMap="BaseResultMap">
+        select
+        <include refid="allColumn"></include>
+        from t_user
+        where id = #{id}
+    </select>
+
+    <sql id="queryCondition">
+        <where>
+            del_flag = '0'
+                    <if test="id != null and id != ''">
+                        AND id = #{id}            
+                    </if>
+                    <if test="username != null and username != ''">
+                        AND username = #{username}            
+                    </if>
+                    <if test="password != null and password != ''">
+                        AND password = #{password}            
+                    </if>
+                    <if test="faceImage != null and faceImage != ''">
+                        AND face_image = #{faceImage}            
+                    </if>
+                    <if test="faceImageBig != null and faceImageBig != ''">
+                        AND face_image_big = #{faceImageBig}            
+                    </if>
+                    <if test="nickname != null and nickname != ''">
+                        AND nickname = #{nickname}            
+                    </if>
+                    <if test="qrcode != null and qrcode != ''">
+                        AND qrcode = #{qrcode}            
+                    </if>
+                    <if test="cid != null and cid != ''">
+                        AND cid = #{cid}            
+                    </if>
+        </where>
+    </sql>
+
+    <select id="listAll" parameterType="com.sss.archetype.entity.User" resultMap="BaseResultMap">
+        select
+        <include refid="allColumn"></include>
+        from t_user
+        <include refid="queryCondition"></include>
+        <choose>
+            <when test="orderByStr !=null and orderByStr != ''">
+                ${orderByStr}
+            </when>
+            <otherwise>
+                ORDER BY update_date DESC
+            </otherwise>
+        </choose>
+    </select>
+
+    <select id="listPage" parameterType="com.sss.archetype.entity.User" resultMap="BaseResultMap">
+        select
+        <include refid="allColumn"></include>
+        from t_user
+        <include refid="queryCondition"></include>
+        <choose>
+            <when test="orderByStr !=null and orderByStr != ''">
+                ${orderByStr}
+            </when>
+            <otherwise>
+                ORDER BY update_date DESC
+            </otherwise>
+        </choose>
+    </select>
+
+    <!-- 根据ID删除 -->
+    <update id="deleteById">
+        update t_user set del_flag = '1' where id = #{id}
+    </update>
+
+    <!-- 根据ID批量删除 -->
+    <update id="deleteByIds" parameterType="java.util.List">
+        update t_user set del_flag = '1' where id in
+        <foreach item="item" index="index" collection="list" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </update>
+
+    <!-- 删除所有 -->
+    <update id="deleteAll">
+        update t_user set del_flag = '1'
+    </update>
+</mapper>

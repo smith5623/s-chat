@@ -1,0 +1,24 @@
+server:
+  port: 8087
+
+spring:
+  hikari:
+    maximum-pool-size: 10
+  thymeleaf:
+    mode: HTML
+    prefix: classpath:/templates/
+    suffix: .html
+    encoding: UTF-8
+  profiles:
+    active: dev
+mybatis:
+  mapper-locations: classpath:mapping/*Mapper.xml
+  type-aliases-package: com.sss  # 配置数据库实体包路径
+  config-location: classpath:mybatis-config.xml
+logging:
+  config: classpath:logback-spring.xml
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"

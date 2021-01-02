@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN" "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+
+    <!--<settings>
+        &lt;!&ndash; 使用驼峰命名法转换字段。 &ndash;&gt;
+        <setting name="mapUnderscoreToCamelCase" value="true"/>
+    </settings>
+
+    <typeAliases>
+        <typeAlias alias="Integer" type="java.lang.Integer"/>
+        <typeAlias alias="Long" type="java.lang.Long"/>
+        <typeAlias alias="HashMap" type="java.util.HashMap"/>
+        <typeAlias alias="LinkedHashMap" type="java.util.LinkedHashMap"/>
+        <typeAlias alias="ArrayList" type="java.util.ArrayList"/>
+        <typeAlias alias="LinkedList" type="java.util.LinkedList"/>
+    </typeAliases>-->
+
+    <plugins>
+        <plugin interceptor="com.sss.archetype.pagination.PaginationInterceptor">
+            <property name="dialectType" value="mysql"/>
+        </plugin>
+        <!--<plugin interceptor="cn.otccloud.nebula.monitor.client.mybatis.plugins.SqlInterceptor" />-->
+    </plugins>
+
+
+    <!--<plugins>
+        &lt;!&ndash;
+         | 分页插件配置
+         | 插件提供二种方言选择：1、默认方言 2、自定义方言实现类，两者均未配置则抛出异常！
+         | dialectType 数据库方言
+         |             默认支持  mysql  oracle  hsql  sqlite  postgre
+         | dialectClazz 方言实现类
+         |              自定义需要实现 com.baomidou.mybatisplus.plugins.pagination.IDialect 接口
+         | &ndash;&gt;
+        &lt;!&ndash; 配置方式一、使用 MybatisPlus 提供方言实现类 &ndash;&gt;
+        <plugin interceptor="com.baomidou.mybatisplus.plugins.PaginationInterceptor">
+            <property name="dialectType" value="mysql" />
+        </plugin>
+        &lt;!&ndash; 配置方式二、使用自定义方言实现类 &ndash;&gt;
+        <plugin interceptor="com.baomidou.mybatisplus.plugins.PaginationInterceptor">
+            <property name="dialectClazz" value="xxx.dialect.XXDialect" />
+        </plugin>
+    </plugins>-->
+</configuration>

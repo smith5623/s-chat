@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head th:replace="common/commonCss :: common_header(~{::title},~{::link})">
+    <title>设置</title>
+    <link rel="stylesheet" href="css/index.css">
+</head>
+
+<body>
+<div class="container">
+    <div th:replace="~{fragments/header::header}"></div>
+    <p>
+        <a class="btn btn-info" href="/user/userEdit" th:href="@{/user/userEdit}">创建</a>
+    </p>
+    <table class="table-striped table-hover table-responsive">
+        <thead>
+        <tr>
+            <th>Id</th>
+            <th>LoginName</th>
+            <th>操作</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="user : ${list}">
+            <td th:text="${user.id}">1</td>
+            <td th:text="${user.loginName}">Test</td>
+            <td>
+                <a href="/userEdit"  class="btn btn-primary" th:href="@{/user/userEdit/__${user.id}__}">Edit</a>
+                <a href="/userDelete" class="btn btn-warning" th:href="@{/user/userDelete/__${user.id}__}">Delete</a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+<div th:replace="~{fragments/footer::footer}"></div>
+<!--使用公有js-->
+<div th:replace="common/commonJs::common_js(~{::script})">
+    <!--每个页面自己的js-->
+    <script src="js/index.js"></script>
+</div>
+</body>
+</html>

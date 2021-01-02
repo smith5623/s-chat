@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sss.archetype.dao.FriendMapper">
+
+    <resultMap id="BaseResultMap" type="com.sss.archetype.entity.Friend">
+        <id column="id" property="id" />
+            <result column="my_user_id" jdbcType="VARCHAR" property="myUserId" />
+            <result column="my_friend_user_id" jdbcType="VARCHAR" property="myFriendUserId" />
+    </resultMap>
+
+    <sql id="allColumn">
+        id,my_user_id,my_friend_user_id
+    </sql>
+
+    <insert id="insert" parameterType="com.sss.archetype.entity.Friend" useGeneratedKeys="true" keyProperty="id">
+        insert into t_friend (<include refid="allColumn"></include>)
+        values (#{id},#{myUserId},#{myFriendUserId})
+    </insert>
+
+    <insert id="insertBatch">
+        insert into t_friend (<include refid="allColumn"></include>)
+        values
+        <foreach collection="list" item="element" separator=",">
+            (#{element.id},#{element.myUserId},#{element.myFriendUserId})
+        </foreach>
+    </insert>
+
+    <update id="updateById" parameterType="com.sss.archetype.entity.Friend">
+        update t_friend set
+            my_user_id = #{myUserId},
+            my_friend_user_id = #{myFriendUserId}
+        where id = #{id}
+    </update>
+
+    <select id="getById" parameterType="java.lang.String" resultMap="BaseResultMap">
+        select
+        <include refid="allColumn"></include>
+        from t_friend
+        where id = #{id}
+    </select>
+
+    <sql id="queryCondition">
+        <where>
+            del_flag = '0'
+                    <if test="id != null and id != ''">
+                        AND id = #{id}            
+                    </if>
+                    <if test="myUserId != null and myUserId != ''">
+                        AND my_user_id = #{myUserId}            
+                    </if>
+                    <if test="myFriendUserId != null and myFriendUserId != ''">
+                        AND my_friend_user_id = #{myFriendUserId}            
+                    </if>
+        </where>
+    </sql>
+
+    <select id="listAll" parameterType="com.sss.archetype.entity.Friend" resultMap="BaseResultMap">
+        select
+        <include refid="allColumn"></include>
+        from t_friend
+        <include refid="queryCondition"></include>
+        <choose>
+            <when test="orderByStr !=null and orderByStr != ''">
+                ${orderByStr}
+            </when>
+            <otherwise>
+                ORDER BY update_date DESC
+            </otherwise>
+        </choose>
+    </select>
+
+    <select id="listPage" parameterType="com.sss.archetype.entity.Friend" resultMap="BaseResultMap">
+        select
+        <include refid="allColumn"></include>
+        from t_friend
+        <include refid="queryCondition"></include>
+        <choose>
+            <when test="orderByStr !=null and orderByStr != ''">
+                ${orderByStr}
+            </when>
+            <otherwise>
+                ORDER BY update_date DESC
+            </otherwise>
+        </choose>
+    </select>
+
+    <!-- 根据ID删除 -->
+    <update id="deleteById">
+        update t_friend set del_flag = '1' where id = #{id}
+    </update>
+
+    <!-- 根据ID批量删除 -->
+    <update id="deleteByIds" parameterType="java.util.List">
+        update t_friend set del_flag = '1' where id in
+        <foreach item="item" index="index" collection="list" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </update>
+
+    <!-- 删除所有 -->
+    <update id="deleteAll">
+        update t_friend set del_flag = '1'
+    </update>
+</mapper>

@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head th:replace="common/commonCss :: common_header(~{::title},~{::link})">
+    <title>设置</title>
+    <link rel="stylesheet" href="css/index.css">
+</head>
+
+<body class="hold-transition sidebar-mini layout-fixed">
+<div class="wrapper">
+    <div th:replace="~{fragments/header::header}"></div>
+    <div th:replace="~{fragments/sidebar::sidebar}"></div>
+    <div class="content-wrapper">
+        <!-- Main content -->
+        <section class="content">
+            <div class="container-fluid">
+                <div class="col-md-12">
+                    <div class="card card-primary card-tabs">
+                        <div class="card-header p-0 pt-1">
+                            <ul class="nav nav-tabs" id="id1" role="tablist">
+                                <li class="pt-2 px-3"><h3 class="card-title">字典管理</h3></li>
+                                <li class="nav-item">
+                                    <a class="nav-link active" id="dict-list" data-toggle="pill" href="#dict-list-body"
+                                       role="tab" aria-controls="dict-list-body" aria-selected="true">字典列表</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" id="dict-new" data-toggle="pill" href="#id-dict-new-edit"
+                                       role="tab" aria-controls="id-dict-new-edit" aria-selected="false">添加/编辑新字典</a>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="card-body">
+                            <div class="tab-content" id="id2">
+                                <div class="tab-pane fade show active" id="dict-list-body" role="tabpanel"
+                                     aria-labelledby="dict-list">
+                                    <table class="table-striped table-hover table-responsive">
+                                        <thead>
+                                        <tr>
+                                            <th>字典Id</th>
+                                            <th>值</th>
+                                            <th>显示名称</th>
+                                            <th>类型</th>
+                                            <th>排序</th>
+                                            <th>操作</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        <tr th:each="e : ${list}">
+                                            <td th:text="${e.id}"></td>
+                                            <td th:text="${e.value}"></td>
+                                            <td th:text="${e.name}"></td>
+                                            <td th:text="${e.type}"></td>
+                                            <td th:text="${e.sort}"></td>
+                                            <td>
+                                                <button type="button" id="editDictBtn" class="btn btn-block btn-primary"
+                                                        th:onclick="'javascript:editDict(\''+${e.id}+ '\')'">编辑
+                                                </button>
+                                                <a href="/userDelete" class="btn btn-warning"
+                                                   th:href="@{/dict/dictDelete/__${e.id}__}">删除</a>
+                                            </td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <div class="tab-pane fade" id="dict-new-body" role="tabpanel" aria-labelledby="dict-new"
+                                     th:fragment="dict-new-edit" th:id="id-dict-new-edit">
+                                    <div class="card card-info">
+                                        <!--<div class="card-header">
+                                            <h3 class="card-title">新的字典</h3>
+                                        </div>-->
+                                        <!-- /.card-header -->
+                                        <!-- form start -->
+                                        <form class="form-horizontal" th:action="@{/dict/dictList}" method="post">
+                                            <input th:type="hidden" id="id" name="id" th:field="${dict.id}"/>
+                                            <input th:type="hidden" id="delFlag" name="delFlag"
+                                                   th:field="${dict.delFlag}"/>
+                                            <div class="card-body">
+                                                <div class="form-group row">
+                                                    <label for="value" class="col-sm-2 col-form-label">值</label>
+                                                    <div class="col-sm-2">
+                                                        <input type="text" class="form-control" id="value"
+                                                               placeholder="值" th:field="${dict.value}">
+                                                    </div>
+                                                </div>
+                                                <div class="form-group row">
+                                                    <label for="type" class="col-sm-2 col-form-label">类型</label>
+                                                    <div class="col-sm-2">
+                                                        <input type="text" class="form-control" id="type"
+                                                               placeholder="类型" th:field="${dict.type}">
+                                                    </div>
+                                                </div>
+                                                <div class="form-group row">
+                                                    <label for="name" class="col-sm-2 col-form-label">显示名称</label>
+                                                    <div class="col-sm-2">
+                                                        <input type="text" class="form-control" id="name"
+                                                               placeholder="显示名称" th:field="${dict.name}">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <!-- /.card-body -->
+                                            <div class="card-footer">
+                                                <button type="submit" class="btn btn-info">保存</button>
+                                                <!--<button type="submit" class="btn btn-default float-right">取消</button>-->
+                                                <a href="#" class="btn btn-warning"
+                                                   th:href="@{/dict/}">取消</a>
+                                            </div>
+                                            <!-- /.card-footer -->
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div><!-- /.container-fluid -->
+        </section>
+        <!-- /.content -->
+    </div>
+
+    <div th:replace="~{fragments/footer::footer}"></div>
+    <aside class="control-sidebar control-sidebar-dark">
+    </aside>
+</div>
+
+<div th:replace="common/commonJs::common_js(~{::script})">
+</div>
+<!--每个页面自己的js-->
+<!--<script src="js/index.js"></script>-->
+<script>
+    $(document).ready(function () {
+        $('#dictListMenu').addClass("active");
+        $('#userListMenu').removeClass("active");
+
+    });
+
+    function editDict(id) {
+        $.ajax({
+            url: '/dict/getDictById',
+            type: 'POST',
+            data: {'id': id},
+            success: function (data) {
+                $('#id').val(data.id);
+                $('#delFlag').val(data.delFlag);
+                $('#value').val(data.value);
+                $('#type').val(data.type);
+                $('#name').val(data.name);
+                $('#dict-new').click();
+            }
+        });
+    }
+</script>
+</body>
+</html>
