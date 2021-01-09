@@ -131,6 +131,13 @@
 		<script src="js/app.js"></script>
 		<script type="text/javascript">
 			mui.plusReady(function() {
+				// 判断用户是否注册登录过，如果本地内存有全局的用户对象，此时直接跳转到首页
+				var userInfo = app.getUserGlobalInfo();
+				if (userInfo != null) {
+					// 页面跳转
+					mui.openWindow("index.html", "index.html");
+				}
+				
 				var userform = document.getElementById("login-form");
 				var username = document.getElementById("username");
 				var password = document.getElementById("password");

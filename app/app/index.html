@@ -64,8 +64,13 @@
 			top: "50px",
 			bottom: "90px"
 		}
-				
+		
 		mui.plusReady(function(){
+			//禁止返回到注册登录页面
+			mui.back = function() {
+				return false;
+			}
+			
 			var indexWebView = plus.webview.currentWebview();
 			for(var i = 0;i< pageArray.length; i++){
 				var p = plus.webview.create(pageArray[i].pageUrl,pageArray[i].pageId,sstyle);
